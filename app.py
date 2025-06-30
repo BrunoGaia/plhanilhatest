@@ -5,9 +5,9 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 # Configurações do Google Sheets
-SHEET_ID = "1STJQ-aaeVf8_aVLC9Q5Qmk7KivmqODlKqeV15KAPSbE"
+SHEET_ID = "1xK8B8cKWgmt8E2H6QlnASR336ZkTGsVAXX0_Kj9qB0A"
 SHEET_NAME = "Página1"
-CRED_FILE = "credenciais/calcunip-7ca1152065d4.json"
+CRED_FILE = "credenciais/calcunip-d2824aaea5a6.json"
 
 # Autenticação
 scopes = [
