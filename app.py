@@ -1,26 +1,28 @@
-// app.py
 import streamlit as st
 import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
+import json
 
-# Configurações do Google Sheets
-SHEET_ID = "1xK8B8cKWgmt8E2H6QlnASR336ZkTGsVAXX0_Kj9qB0A"
-SHEET_NAME = "Página1"
-CRED_FILE = "credenciais/calcunip-d2824aaea5a6.json"
-
-# Autenticação
+# --- Autenticação via secrets ---
+service_account_info = json.loads(st.secrets["gcp_service_account"])
 scopes = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive"
 ]
-credentials = Credentials.from_service_account_file(CRED_FILE, scopes=scopes)
+credentials = Credentials.from_service_account_info(service_account_info, scopes=scopes)
 client = gspread.authorize(credentials)
+
+# --- Configuração da planilha ---
+SHEET_ID = "1xK8B8cKWgmt8E2H6QlnASR336ZkTGsVAXX0_Kj9qB0A"
+SHEET_NAME = "planilha teste"
+
 sheet = client.open_by_key(SHEET_ID)
 worksheet = sheet.worksheet(SHEET_NAME)
 
-# Interface
+# --- Interface do usuário ---
 st.title("Registro de Visitantes")
+
 nome = st.text_input("Digite seu nome:")
 idade = st.number_input("Digite sua idade:", min_value=0, max_value=120, step=1)
 
@@ -31,8 +33,8 @@ if st.button("Enviar"):
     else:
         st.warning("Preencha todos os campos.")
 
-# Exibir dados
+# --- Mostrar dados registrados ---
 st.subheader("Visitantes Registrados:")
 dados = worksheet.get_all_values()
-df = pd.DataFrame(dados[1:], columns=dados[0])
+df = pd.DataFrame(dados[1:], columns=dados[0])  # Ignora cabeçalho duplicado
 st.dataframe(df)
